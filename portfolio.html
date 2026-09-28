@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reel — Video Editor Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060606;
+    --bg-raised: #0d0d0d;
+    --line: #2a2a28;
+    --line-strong: #454542;
+    --ink: #f1f0ec;
+    --ink-dim: #97968f;
+    --ink-faint: #5c5b56;
+    --white: #ffffff;
+    --font-display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) { :root { --bg: #060606; } }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-display);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 40px; }
+
+  /* ---------- Reveal-on-scroll ---------- */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+  .reveal-stagger > * { opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .5s ease; }
+  .reveal-stagger.in-view > * { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-stagger > *, .corner path, .hero-anim { transition: none !important; animation: none !important; opacity: 1 !important; transform: none !important; }
+  }
+
+  /* ---------- Frame brackets (SVG, draws in on load) ---------- */
+  .brackets { position: absolute; inset: 0; pointer-events: none; }
+  .corner { position: absolute; width: 22px; height: 22px; }
+  .corner.tl { top: 0; left: 0; } .corner.tr { top: 0; right: 0; }
+  .corner.bl { bottom: 0; left: 0; } .corner.br { bottom: 0; right: 0; }
+  .corner path {
+    fill: none; stroke: var(--ink-dim); stroke-width: 1.5; opacity: .55;
+    stroke-dasharray: 46; stroke-dashoffset: 46;
+    animation: draw-corner .9s ease forwards;
+  }
+  .corner.tl path { animation-delay: .1s; }
+  .corner.tr path { animation-delay: .22s; }
+  .corner.bl path { animation-delay: .34s; }
+  .corner.br path { animation-delay: .46s; }
+  @keyframes draw-corner { to { stroke-dashoffset: 0; } }
+
+  /* ---------- Top bar ---------- */
+  header.top {
+    position: sticky; top: 0; z-index: 40;
+    background: rgba(6,6,6,.85); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .top-inner { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
+  .mark { font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+  .mark span { color: var(--ink-faint); font-weight: 500; }
+  nav.top-nav { display: flex; gap: 32px; font-family: var(--font-mono); font-size: 13px; color: var(--ink-dim); }
+  nav.top-nav a { transition: color .15s ease; }
+  nav.top-nav a:hover { color: var(--ink); }
+  .nav-cta {
+    font-family: var(--font-mono); font-size: 12px; padding: 10px 18px;
+    background: var(--ink); color: var(--bg); border: 1px solid var(--ink);
+    transition: background .15s ease, color .15s ease;
+  }
+  .nav-cta:hover { background: transparent; color: var(--ink); }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 120px 0 90px; border-bottom: 1px solid var(--line); }
+  .hero-frame { position: relative; padding: 64px 56px; }
+  .hero-anim { opacity: 0; transform: translateY(16px); animation: hero-in .7s ease forwards; }
+  .hero-anim.d1 { animation-delay: .05s; }
+  .hero-anim.d2 { animation-delay: .18s; }
+  .hero-anim.d3 { animation-delay: .32s; }
+  .hero-anim.d4 { animation-delay: .46s; }
+  @keyframes hero-in { to { opacity: 1; transform: translateY(0); } }
+
+  .hero-eyebrow { font-family: var(--font-mono); font-size: 13px; color: var(--ink-dim); display: flex; gap: 18px; margin-bottom: 28px; flex-wrap: wrap; }
+  .hero-eyebrow .dur::before { content: "REEL "; color: var(--ink-faint); }
+  h1.hero-title { font-size: clamp(48px, 7vw, 96px); line-height: 0.98; font-weight: 800; letter-spacing: -0.03em; max-width: 16ch; }
+  h1.hero-title em {
+    font-style: normal; color: transparent; -webkit-text-stroke: 1px var(--ink-dim);
+    display: inline-block; opacity: 0; transform: translateY(10px);
+    animation: hero-in .7s ease forwards; animation-delay: .55s;
+  }
+  .hero-sub { margin-top: 28px; max-width: 48ch; font-size: 18px; line-height: 1.6; color: var(--ink-dim); font-weight: 500; }
+  .hero-actions { margin-top: 44px; display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn { font-family: var(--font-mono); font-size: 13px; padding: 14px 22px; border: 1px solid var(--line-strong); transition: background .15s ease, color .15s ease, border-color .15s ease; }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn.primary:hover { background: transparent; color: var(--ink); }
+  .btn.ghost:hover { border-color: var(--ink); background: var(--bg-raised); }
+
+  /* ---------- Stats ---------- */
+  .timeline { border-bottom: 1px solid var(--line); font-family: var(--font-mono); }
+  .timeline .wrap { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .tl-cell { padding: 26px 28px; border-left: 1px solid var(--line); }
+  .tl-cell:first-child { border-left: none; }
+  .tl-num { font-size: 26px; font-weight: 500; color: var(--ink); }
+  .tl-label { margin-top: 6px; font-size: 12px; color: var(--ink-faint); letter-spacing: .02em; }
+
+  /* ---------- Section heading pattern ---------- */
+  .section { padding: 110px 0; border-bottom: 1px solid var(--line); }
+  .section-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 40px; flex-wrap: wrap; }
+  .section-head h2 { font-size: clamp(30px, 3.6vw, 44px); font-weight: 700; letter-spacing: -0.02em; }
+  .section-code { font-family: var(--font-mono); font-size: 13px; color: var(--ink-faint); }
+
+  /* ---------- Work: top-level tabs ---------- */
+  .work-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .work-tab {
+    font-family: var(--font-mono); font-size: 13px; padding: 10px 18px;
+    border: 1px solid var(--line-strong); background: transparent; color: var(--ink-dim);
+    cursor: pointer; transition: color .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .work-tab:hover { color: var(--ink); }
+  .work-tab.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  /* ---------- Category chips ---------- */
+  .chip-row { display: flex; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; }
+  .chip {
+    font-family: var(--font-mono); font-size: 12px; padding: 6px 14px;
+    border-bottom: 1px solid transparent; color: var(--ink-faint);
+    cursor: pointer; transition: color .15s ease, border-color .15s ease;
+  }
+  .chip:hover { color: var(--ink-dim); }
+  .chip.active { color: var(--ink); border-bottom-color: var(--ink); }
+
+  .work-panel { display: none; opacity: 0; transition: opacity .25s ease; }
+  .work-panel.visible { display: block; }
+  .work-panel.fade-in { opacity: 1; }
+
+  /* ---------- Work grid ---------- */
+  .reel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--line); border: 1px solid var(--line); }
+  .reel-grid.four-col { grid-template-columns: repeat(4, 1fr); }
+  .reel-grid.h-grid { margin-bottom: 24px; }
+  .reel-card { background: var(--bg); position: relative; transition: opacity .2s ease; }
+  .reel-thumb {
+    position: relative; overflow: hidden;
+    background: linear-gradient(160deg, #1c1c19, #060605 70%);
+    display: flex; align-items: center; justify-content: center;
+    transition: filter .25s ease;
+  }
+ 
+  .reel-thumb.h { aspect-ratio: 16/9; }
+  .reel-thumb.v { aspect-ratio: 9/16; }
+  .reel-thumb.sq { aspect-ratio: 1/1; }
+  .reel-card:hover .reel-thumb { filter: brightness(1.15); }
+  .play svg { width: 44px; height: 44px; opacity: .8; transition: transform .2s ease, opacity .2s ease; }
+  .reel-card:hover .play svg { transform: scale(1.1); opacity: 1; }
+  .reel-meta { padding: 22px 26px 26px; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .reel-meta.stacked { flex-direction: column; gap: 6px; padding: 18px 20px 22px; }
+  .reel-meta h3 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .reel-meta.stacked h3 { font-size: 17px; }
+  .reel-meta p { margin-top: 6px; font-size: 14px; color: var(--ink-dim); }
+  .reel-tc { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); white-space: nowrap; }
+
+  /* ---------- Video placeholder layer ---------- */
+  .reel-video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; opacity: 0; transition: opacity .35s ease;
+    pointer-events: none;
+  }
+  .reel-video.is-ready { opacity: 1; }
+  .play { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .placeholder-tag {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em;
+    color: var(--ink-faint); border: 1px solid var(--line-strong);
+    padding: 4px 8px; opacity: .85; text-align: center;
+  }
+  .reel-card.has-video .placeholder-tag { display: none; }
+
+  .icon-pause { display: none; }
+.reel-card.is-playing .icon-play { display: none; }
+.reel-card.is-playing .icon-pause { display: block; }
+
+.reel-card.is-playing .play {
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.reel-card.is-playing:hover .play {
+  opacity: 1;
+}
+
+.reel-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.reel-loader.is-active { display: flex; }
+.reel-loader svg {
+  width: 34px; height: 34px;
+  animation: spin 0.8s linear infinite;
+}
+.reel-loader circle {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 20;
+  opacity: .85;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+  .reel-scrubber {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: 14px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  z-index: 3;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .2s ease;
+  display: none;
+}
+.reel-card.has-video .reel-scrubber { display: block; }
+.reel-card.has-video:hover .reel-scrubber,
+.reel-card.has-video.is-playing .reel-scrubber { opacity: 1; }
+
+.reel-scrubber::-webkit-slider-runnable-track {
+  height: 3px;
+  background: rgba(241,240,236,.25);
+}
+.reel-scrubber::-moz-range-track {
+  height: 3px;
+  background: rgba(241,240,236,.25);
+}
+.reel-scrubber::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--ink);
+  margin-top: -4px;
+  border: none;
+}
+.reel-scrubber::-moz-range-thumb {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: none;
+}
+
+.fullscreen-btn {
+  position: absolute;
+  top: 10px; right: 10px;
+  z-index: 4;
+  width: 30px; height: 30px;
+  display: none;
+  align-items: center; justify-content: center;
+  background: rgba(6,6,6,.55);
+  border: 1px solid var(--line-strong);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.reel-card:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+.reel-card:fullscreen .reel-video {
+  object-fit: contain;
+}
+.reel-card:fullscreen .reel-thumb {
+  background: #000;
+}
+.reel-card:-webkit-full-screen .reel-video {
+  object-fit: contain;
+}
+.reel-card:-webkit-full-screen .reel-thumb {
+  background: #000;
+}
+.reel-card:-webkit-full-screen {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+.reel-card:fullscreen .reel-thumb,
+.reel-card:-webkit-full-screen .reel-thumb {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: unset;
+}
+.reel-card:fullscreen .reel-meta,
+.reel-card:-webkit-full-screen .reel-meta {
+  display: none;
+}
+.reel-card:fullscreen .reel-scrubber,
+.reel-card:-webkit-full-screen .reel-scrubber {
+  opacity: 1;
+}
+.reel-card:fullscreen .fullscreen-btn,
+.reel-card:-webkit-full-screen .fullscreen-btn {
+  opacity: 1;
+}
+.reel-card.has-video .fullscreen-btn { display: flex; }
+.reel-card.has-video:hover .fullscreen-btn,
+.reel-card.has-video.is-playing .fullscreen-btn { opacity: 1; }
+.fullscreen-btn svg { width: 15px; height: 15px; }
+
+  /* ---------- About ---------- */
+  .about-grid { display: grid; grid-template-columns: 0.7fr 1.3fr 0.9fr; gap: 56px; align-items: start; }
+  .about-photo { position: relative; aspect-ratio: 4/5; overflow: hidden; background: #0d0d0d; }
+  .about-photo-img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; filter: grayscale(1) contrast(1.05) brightness(.95); display: block; }
+  .about-copy p { font-size: 17px; line-height: 1.75; color: var(--ink-dim); }
+  .about-copy p + p { margin-top: 20px; }
+  .about-copy .quote-line { color: var(--ink); font-style: normal; }
+  .tools { border-top: 1px solid var(--line); }
+  .tool-row { display: flex; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--line); font-family: var(--font-mono); font-size: 14px; }
+  .tool-row span:first-child { color: var(--ink); }
+  .tool-row span:last-child { color: var(--ink-faint); text-align: right; }
+
+  /* ---------- Testimonials ---------- */
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--line); border: 1px solid var(--line); }
+  .testi-card { background: var(--bg); padding: 30px 28px; display: flex; flex-direction: column; gap: 20px; }
+  .testi-quote { font-size: 15px; line-height: 1.65; color: var(--ink-dim); }
+  .testi-quote::before { content: "\201C"; color: var(--ink-faint); }
+  .testi-quote::after { content: "\201D"; color: var(--ink-faint); }
+  .testi-person { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+  .testi-avatar {
+    width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line-strong);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 12px; color: var(--ink-dim); flex-shrink: 0;
+  }
+  .testi-person div h4 { font-size: 14px; font-weight: 700; }
+  .testi-person div p { font-size: 12px; color: var(--ink-faint); margin-top: 2px; font-family: var(--font-mono); }
+
+  /* ---------- Contact ---------- */
+  .contact { padding: 130px 0; border-bottom: none; }
+  .contact h2 { font-size: clamp(38px, 6vw, 72px); font-weight: 800; letter-spacing: -0.03em; max-width: 16ch; }
+  .contact-row { margin-top: 48px; display: flex; gap: 48px; flex-wrap: wrap; font-family: var(--font-mono); font-size: 14px; }
+  .contact-row a { color: var(--ink-dim); border-bottom: 1px solid transparent; transition: color .15s ease, border-color .15s ease; }
+  .contact-row a:hover { color: var(--ink); border-color: var(--ink-dim); }
+
+  footer { padding: 28px 0; display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); }
+
+  @media (max-width: 860px) {
+    .wrap { padding: 0 22px; }
+    .hero { padding: 88px 0 60px; }
+    .hero-frame { padding: 40px 26px; }
+    nav.top-nav { display: none; }
+    .timeline .wrap { grid-template-columns: repeat(2, 1fr); }
+    .tl-cell:nth-child(3) { border-left: none; }
+    .reel-grid, .reel-grid.four-col { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .about-photo { max-width: 260px; }
+    .testi-grid { grid-template-columns: 1fr; }
+    .section { padding: 70px 0; }
+  }
+
+  :focus-visible { outline: 1.5px solid var(--ink); outline-offset: 3px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <div class="mark">A. EDITOR<span> — cuts &amp; grades</span></div>
+    <nav class="top-nav">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#testimonials">Testimonials</a>
+    </nav>
+    <a class="nav-cta" href="#contact">Get in touch</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-frame">
+      <div class="brackets">
+        <svg class="corner tl" viewBox="0 0 22 22"><path d="M0,22 L0,0 L22,0"/></svg>
+        <svg class="corner tr" viewBox="0 0 22 22"><path d="M0,0 L22,0 L22,22"/></svg>
+        <svg class="corner bl" viewBox="0 0 22 22"><path d="M0,0 L0,22 L22,22"/></svg>
+        <svg class="corner br" viewBox="0 0 22 22"><path d="M22,0 L22,22 L0,22"/></svg>
+      </div>
+
+      <div class="hero-eyebrow hero-anim d1">
+        <span class="dur">02:41</span>
+        <span>·</span>
+        <span>VLOGS / VSL / SHORT FORM / SFX / TALKING HEAD / MOTION / COLOR GRADING</span>
+      </div>
+
+      <h1 class="hero-title hero-anim d2">
+        Cuts that hold the <em>Frame.</em>
+      </h1>
+
+      <p class="hero-sub hero-anim d3">
+        I help creators, brands, and founders save time — cutting long-form narratives and high-retention
+        shorts so you can focus on shooting, not sitting in a timeline.
+      </p>
+
+      <div class="hero-actions hero-anim d4">
+        <a class="btn primary" href="#work">View the work</a>
+        <a class="btn ghost" href="#contact">Start a project</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="timeline">
+  <div class="wrap reveal-stagger reveal">
+    <div class="tl-cell"><div class="tl-num">100+</div><div class="tl-label">PROJECTS DELIVERED</div></div>
+    <div class="tl-cell"><div class="tl-num">3 YRS</div><div class="tl-label">CUTTING PROFESSIONALLY</div></div>
+    <div class="tl-cell"><div class="tl-num">2-3 DAYS</div><div class="tl-label">AVG TURNAROUND</div></div>
+    <div class="tl-cell"><div class="tl-num">4K/DCP</div><div class="tl-label">DELIVERY FORMATS</div></div>
+  </div>
+</section>
+
+<!-- ============ MY WORK ============ -->
+<section class="section" id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>My work</h2>
+      <div class="section-code" id="work-section-code">VLOGS, VSL &amp; Vlog — 001/06</div>
+    </div>
+
+    <div class="work-tabs reveal">
+      <button class="work-tab active" data-tab="long">Long form</button>
+      <button class="work-tab" data-tab="short">Short form</button>
+      <button class="work-tab" data-tab="motion">Motion Graphics</button>
+    </div>
+
+    <!-- LONG FORM -->
+    <div class="work-panel visible fade-in" data-panel="long">
+      <div class="chip-row">
+        <span class="chip active" data-cat="all">All</span>
+        <span class="chip" data-cat="Tvlog">Travel Vlog</span>
+        <span class="chip" data-cat="vsl">VSL</span>
+        <span class="chip" data-cat="gym">Gym</span>
+        <span class="chip" data-cat="general">General</span>
+
+      </div>
+      <div class="reel-grid reveal-stagger reveal">
+        <div class="reel-card" data-cat="Tvlog" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/VegasVlog2.mp4">
+          <div class="reel-thumb h">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+          <div class="reel-meta"><div><h3>Vegas Vlog - Travel Vlog </h3></div><div class="reel-tc">00:00:47</div></div>
+        </div>
+        <div class="reel-card" data-cat="Tvlog" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1790425184/AnivVlog.mp4">
+          <div class="reel-thumb h">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+          <div class="reel-meta"><div><h3>Aniversarry Vlog - Travel Vlog</h3></div><div class="reel-tc">00:03:41</div></div>
+        </div>
+        <div class="reel-card" data-cat="general" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1790427075/VSL.mp4">
+          <div class="reel-thumb h">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+          <div class="reel-meta"><div><h3>PrimeVerse Event Vlog - General Vlog</h3></div><div class="reel-tc">00:48:20</div></div>
+        </div>
+        <div class="reel-card" data-cat="vsl" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1790427094/VSL1.mp4">
+          <div class="reel-thumb h">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+          <div class="reel-meta"><div><h3>PrimeVerse - VSL | Course </h3></div><div class="reel-tc">00:11:05</div></div>
+        </div>
+        <div class="reel-card" data-cat="gym" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1790430669/Gyn.mp4">
+          <div class="reel-thumb h">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+          <div class="reel-meta"><div><h3>Rahul.lifelogs - Gym Vlog</h3></div><div class="reel-tc">00:07:44</div></div>
+        </div>
+        <div class="reel-card" data-cat="Tvlog" data-video-src="">
+          <div class="reel-thumb h">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+          <div class="reel-meta"><div><h3>Founder Series — Vlog</h3></div><div class="reel-tc">00:36:12</div></div>
+        </div>
+        <div class="reel-card" data-cat="Tvlog" data-video-src="">
+          <div class="reel-thumb h">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+        <div class="reel-meta"><div><h3>Founder Series — Vlog</h3></div><div class="reel-tc">00:36:12</div></div>
+        </div>
+        
+        
+
+
+
+      </div>
+    </div>
+
+    <!-- SHORT FORM -->
+    <div class="work-panel" data-panel="short">
+      <div class="chip-row">
+        <span class="chip active" data-cat="all">All</span>
+        <span class="chip" data-cat="ads">Ads</span>
+        <span class="chip" data-cat="talkinghead">Talking Head</span>
+        <span class="chip" data-cat="general">General</span>
+      </div>
+      <div class="reel-grid four-col reveal-stagger reveal">
+        <div class="reel-card" data-cat="general" data-video-src="">
+          <div class="reel-thumb v">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+          <div class="reel-meta stacked"><h3>Leg Day — Hype Edit</h3><div class="reel-tc">00:00:32</div></div>
+        </div>
+        <div class="reel-card" data-cat="talkinghead" data-video-src="">
+          <div class="reel-thumb v">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+          <div class="reel-meta stacked"><h3>Ep. 12 Clip — Talking Head</h3><div class="reel-tc">00:00:48</div></div>
+        </div>
+        <div class="reel-card" data-cat="ads" data-video-src="">
+          <div class="reel-thumb v">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+          <div class="reel-meta stacked"><h3>Product Drop — Ad Cutdown</h3><div class="reel-tc">00:00:15</div></div>
+        </div>
+        <div class="reel-card" data-cat="general" data-video-src="">
+          <div class="reel-thumb v">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+          <div class="reel-meta stacked"><h3>PR Day — Hype Edit</h3><div class="reel-tc">00:00:27</div></div>
+        </div>
+        <div class="reel-card" data-cat="talkinghead" data-video-src="">
+          <div class="reel-thumb v">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+          <div class="reel-meta stacked"><h3>Founder Q&amp;A — Talking Head</h3><div class="reel-tc">00:00:55</div></div>
+        </div>
+        <div class="reel-card" data-cat="ads" data-video-src="">
+          <div class="reel-thumb v">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+          <div class="reel-meta stacked"><h3>App Install — Ad Cutdown</h3><div class="reel-tc">00:00:20</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOTION GRAPHICS -->
+<div class="work-panel" data-panel="motion">
+  <div class="chip-row">
+    <span class="chip active" data-cat="all">All</span>
+    <span class="chip" data-cat="horizontal">Horizontal</span>
+    <span class="chip" data-cat="vertical">Vertical</span>
+  </div>
+
+  <!-- Horizontal 16:9 -->
+  <div class="reel-grid h-grid reveal-stagger reveal">
+    <div class="reel-card" data-cat="horizontal" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1790589168/WSoundDesign.mp4">
+      <div class="reel-thumb h">
+        <video class="reel-video" muted loop playsinline preload="metadata"></video>
+        <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+        <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+      </div>
+      <div class="reel-meta"><div><h3>Move It - Recreation</h3></div><div class="reel-tc">0:12</div></div>
+    </div>
+
+    <div class="reel-card" data-cat="horizontal" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1790589510/Saas2.1.mp4">
+      <div class="reel-thumb h">
+        <video class="reel-video" muted loop playsinline preload="metadata"></video>
+        <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+        <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+      </div>
+      <div class="reel-meta"><div><h3>PrimeVerse Tutorial</h3></div><div class="reel-tc">0:08</div></div>
+    </div>
+
+    <div class="reel-card" data-cat="horizontal" data-video-src="">
+      <div class="reel-thumb h">
+        <video class="reel-video" muted loop playsinline preload="metadata"></video>
+        <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+        <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+      </div>
+      <div class="reel-meta"><div><h3>Transition Pack</h3></div><div class="reel-tc">0:04</div></div>
+    </div>
+  </div>
+
+  <!-- Vertical 9:16 -->
+  <div class="reel-grid four-col v-grid reveal-stagger reveal">
+    <div class="reel-card" data-cat="vertical" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1790589428/Akimi9_16.mp4">
+      <div class="reel-thumb v">
+        <video class="reel-video" muted loop playsinline preload="metadata"></video>
+        <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+        <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+      </div>
+      <div class="reel-meta stacked"><h3>Step by step guide - Akimi studios</h3><div class="reel-tc">0:06</div></div>
+    </div>
+    <div class="reel-card" data-cat="vertical" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1790589297/PrimeComFinalV2.mp4">
+      <div class="reel-thumb v">
+        <video class="reel-video" muted loop playsinline preload="metadata"></video>
+        <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+        <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+      </div>
+      <div class="reel-meta stacked"><h3>PrimeVerse VSL</h3><div class="reel-tc">0:06</div></div>
+    </div>
+  </div>
+</div>
+
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>About</h2>
+      <div class="section-code">CREW — 001</div>
+    </div>
+    <div class="about-grid reveal">
+
+      <div class="about-photo">
+        <img src="https://res.cloudinary.com/v7ehljsh/image/upload/v1790424582/DSC_5244.jpg">
+        <div class="brackets">
+          <svg class="corner tl" viewBox="0 0 22 22"><path d="M0,22 L0,0 L22,0"/></svg>
+          <svg class="corner tr" viewBox="0 0 22 22"><path d="M0,0 L22,0 L22,22"/></svg>
+          <svg class="corner bl" viewBox="0 0 22 22"><path d="M0,0 L0,22 L22,22"/></svg>
+          <svg class="corner br" viewBox="0 0 22 22"><path d="M22,0 L22,22 L0,22"/></svg>
+        </div>
+      </div>
+
+      <div class="about-copy">
+        <p>Started editing as a hobby — cutting motivational videos to go with my own fitness content, long before it was a job. Somewhere between the first client and the fiftieth, the workflow tightened up: most projects now turn around in 1–2 days without losing the polish. The rule I still edit by — <span class="quote-line">if I don't find it good to watch, I'm doing something wrong.</span> Editing isn't just cutting clips together, it's making the video watchable, and shaping it around what the audience is actually going to watch.</p>
+        <p>My process stays the same no matter the project: rough cut first to lock the story, then transitions, then a full polish pass, then sound design — always last, never first. That order isn't random, it's what keeps the pacing honest. I work across marketing, gaming, fitness, and vlogs, which keeps me flexible instead of boxed into one style or one kind of client.</p>
+      </div>
+
+      <div class="tools">
+        <div class="tool-row"><span>Editing</span><span>Premiere Pro</span></div>
+        <div class="tool-row"><span>Grading</span><span>DaVinci Resolve</span></div>
+        <div class="tool-row"><span>Motion &amp; VFX</span><span>After Effects</span></div>
+        <div class="tool-row"><span>Sound</span><span>Pro Tools</span></div>
+        <div class="tool-row"><span>Delivery Time</span><span>2 - 3 days </span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="section" id="testimonials">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Testimonials</h2>
+      <div class="section-code">REVIEWS — 001/05</div>
+    </div>
+
+    <div class="testi-grid reveal-stagger reveal">
+      <div class="testi-card">
+        <p class="testi-quote">Turnaround was insanely fast without cutting corners. Our launch VSL converted better than anything we'd run before.</p>
+        <div class="testi-person"><div class="testi-avatar">RM</div><div><h4>Rea Manalo</h4><p>Founder, Lower Aisle</p></div></div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote">Handed over raw gym footage and got back a reel that actually made people want to train. Knows pacing instinctively.</p>
+        <div class="testi-person"><div class="testi-avatar">JT</div><div><h4>Jordan Tan</h4><p>Coach, Iron Collective</p></div></div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote">Our Vlog clips finally started performing once we handed the cutdowns over. Captions and pacing made all the difference.</p>
+        <div class="testi-person"><div class="testi-avatar">SK</div><div><h4>Sam Keller</h4><p>Host, Founder Series</p></div></div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote">Fast, communicative, and the vlogs always feel like they belong to our channel — not a generic template.</p>
+        <div class="testi-person"><div class="testi-avatar">AN</div><div><h4>Ana Reyes</h4><p>Creator, Day One Vlogs</p></div></div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote">Our ad cutdowns went from an afterthought to our best-performing creative on paid social.</p>
+        <div class="testi-person"><div class="testi-avatar">DL</div><div><h4>Diego Luna</h4><p>Marketing Lead, Motiv Studio</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap reveal">
+    <h2>Have a cut that needs shaping?</h2>
+    <div class="contact-row">
+      <a href="mailto:valentino.micokyle@gmail.com">valentino.micokyle@gmail.com</a>
+      <a href="https://www.instagram.com/mkcv_creates/">Instagram</a>
+      <a href="#">Vimeo</a>
+      <a href="#">LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <span>© 2026 A. Editor</span>
+  <span>Manila, PH — LOCAL TIME 21:40</span>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in-view');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Stagger delays for grid children
+  document.querySelectorAll('.reveal-stagger').forEach(group => {
+    [...group.children].forEach((child, i) => {
+      child.style.transitionDelay = (i * 70) + 'ms';
+    });
+  });
+
+  // Work tabs
+  const sectionCodes = {
+    long: 'VLOGS, VSL &amp; Vlog — 001/06',
+    short: 'HYPE, ADS &amp; TALKING HEAD — 001/06',
+    motion: 'MOTION &amp; VFX — 001/04'
+  };
+  const codeEl = document.getElementById('work-section-code');
+  const tabs = document.querySelectorAll('.work-tab');
+  const panels = document.querySelectorAll('.work-panel');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      document.querySelectorAll('.reel-card.is-playing').forEach(card => {
+  card.querySelector('.reel-video').pause();
+  card.classList.remove('is-playing');
+});
+
+
+      panels.forEach(p => {
+        if (p.dataset.panel === target) {
+          p.classList.add('visible');
+          requestAnimationFrame(() => p.classList.add('fade-in'));
+          const chips = p.querySelectorAll('.chip');
+          chips.forEach(c => c.classList.remove('active'));
+          if (chips[0]) chips[0].classList.add('active');
+          p.querySelectorAll('.reel-card').forEach(card => card.style.display = '');
+          p.querySelectorAll('.reel-grid').forEach(g => {
+  g.style.display = '';
+  g.classList.add('in-view');
+});
+        } else {
+          p.classList.remove('fade-in');
+          setTimeout(() => { if (!p.classList.contains('fade-in')) p.classList.remove('visible'); }, 200);
+        }
+      });
+
+      codeEl.innerHTML = sectionCodes[target];
+    });
+  });
+
+  // Category chip filters
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const panel = chip.closest('.work-panel');
+      panel.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const cat = chip.dataset.cat;
+
+      // 1. update the cards first
+      panel.querySelectorAll('.reel-card').forEach(card => {
+        const show = cat === 'all' || card.dataset.cat === cat;
+        card.style.display = show ? '' : 'none';
+      });
+
+      // 2. then show or hide each grid based on the updated cards
+      panel.querySelectorAll('.reel-grid').forEach(grid => {
+        const anyVisible = [...grid.querySelectorAll('.reel-card')].some(c => c.style.display !== 'none');
+        grid.style.display = anyVisible ? '' : 'none';
+        if (anyVisible) grid.classList.add('in-view');
+      });
+    });
+  });
+
+ // ---------- Video placeholders ----------
+document.querySelectorAll('.reel-card').forEach(card => {
+  const src = card.dataset.videoSrc;
+  const video = card.querySelector('.reel-video');
+  const scrubber = card.querySelector('.reel-scrubber');
+  if (!src) return; // no video assigned yet — placeholder stays visible
+
+  card.classList.add('has-video');
+
+  // Fullscreen button
+const fsBtn = document.createElement('button');
+fsBtn.className = 'fullscreen-btn';
+fsBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#f1f0ec" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+card.appendChild(fsBtn);
+
+fsBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+  if (isFullscreen) {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  } else {
+    if (card.requestFullscreen) {
+      card.requestFullscreen();
+    } else if (card.webkitRequestFullscreen) {
+      card.webkitRequestFullscreen();
+    }
+  }
+});
+  const source = document.createElement('source');
+  source.src = src;
+  video.appendChild(source);
+  const loader = document.createElement('div');
+loader.className = 'reel-loader';
+loader.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>';
+card.appendChild(loader);
+
+video.addEventListener('loadedmetadata', () => {
+  video.currentTime = 0.1;
+  scrubber.max = video.duration;
+});
+video.addEventListener('loadeddata', () => {
+  video.classList.add('is-ready');
+});
+video.addEventListener('waiting', () => {
+  loader.classList.add('is-active');
+});
+video.addEventListener('playing', () => {
+  loader.classList.remove('is-active');
+});
+video.addEventListener('canplay', () => {
+  loader.classList.remove('is-active');
+});
+video.addEventListener('timeupdate', () => {
+  scrubber.value = video.currentTime;
+});
+video.addEventListener('ended', () => {
+  card.classList.remove('is-playing');
+  video.currentTime = 0;
+});
+
+  video.load();
+
+  // Dragging the scrubber seeks the video, and must not toggle play/pause
+  // on the card underneath it.
+  ['click', 'mousedown', 'touchstart'].forEach(evt =>
+    scrubber.addEventListener(evt, e => e.stopPropagation())
+  );
+  scrubber.addEventListener('input', () => {
+    video.currentTime = scrubber.value;
+  });
+
+  card.addEventListener('click', () => {
+  if (video.paused) {
+    // pause any other video that's currently playing
+    document.querySelectorAll('.reel-card.is-playing').forEach(other => {
+      if (other !== card) {
+        other.querySelector('.reel-video').pause();
+        other.classList.remove('is-playing');
+      }
+    });
+
+    video.muted = false;
+if (video.readyState < 3) {
+  loader.classList.add('is-active');
+}
+video.play().catch(() => {});
+card.classList.add('is-playing');
+  } else {
+    video.pause();
+    card.classList.remove('is-playing');
+  }
+});
+});
+</script>
+
+</body>
+</html>
