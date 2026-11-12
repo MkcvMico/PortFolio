@@ -163,11 +163,47 @@
   .reel-card:hover .reel-thumb { filter: brightness(1.15); }
   .play svg { width: 44px; height: 44px; opacity: .8; transition: transform .2s ease, opacity .2s ease; }
   .reel-card:hover .play svg { transform: scale(1.1); opacity: 1; }
-  .reel-meta { padding: 22px 26px 26px; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .reel-meta {
+  padding: 22px 26px 26px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
   .reel-meta.stacked { flex-direction: column; gap: 6px; padding: 18px 20px 22px; }
   .reel-meta h3 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+  .reel-meta h3 a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .15s ease;
+}
+.reel-meta h3 a:hover {
+  border-bottom-color: var(--ink-dim);
+}
   .reel-meta.stacked h3 { font-size: 17px; }
   .reel-meta p { margin-top: 6px; font-size: 14px; color: var(--ink-dim); }
+ .reel-stats {
+  width: 100%;
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+.reel-stats span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.reel-stats svg {
+  width: 13px;
+  height: 13px;
+  opacity: .7;
+  flex-shrink: 0;
+}
   .reel-tc { font-family: var(--font-mono); font-size: 12px; color: var(--ink-faint); white-space: nowrap; }
 
   /* ---------- Video placeholder layer ---------- */
@@ -497,7 +533,7 @@
           </div>
           <div class="reel-meta"><div><h3>PrimeVerse - VSL | Course </h3></div><div class="reel-tc">00:11:05</div></div>
         </div>
-        <div class="reel-card" data-cat="gym" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1790430669/Gyn.mp4">
+        <div class="reel-card" data-cat="gym" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1790430669/Gyn.mp4" data-likes="1.2K" data-views="45K" data-comments="230" data-link="https://www.instagram.com/reel/DdJAexRyuwK">
           <div class="reel-thumb h">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
@@ -533,7 +569,7 @@
     <div class="work-panel" data-panel="short">
       <div class="chip-row">
         <span class="chip active" data-cat="all">All</span>
-        <span class="chip" data-cat="ads">Ads</span>
+        <span class="chip" data-cat="reels">Reels</span>
         <span class="chip" data-cat="talkinghead">Talking Head</span>
         <span class="chip" data-cat="general">General</span>
       </div>
@@ -554,7 +590,7 @@
           </div>
           <div class="reel-meta stacked"><h3>Ep. 12 Clip — Talking Head</h3><div class="reel-tc">00:00:48</div></div>
         </div>
-        <div class="reel-card" data-cat="ads" data-video-src="">
+        <div class="reel-card" data-cat="reels" data-video-src="">
           <div class="reel-thumb v">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
@@ -578,7 +614,7 @@
           </div>
           <div class="reel-meta stacked"><h3>Founder Q&amp;A — Talking Head</h3><div class="reel-tc">00:00:55</div></div>
         </div>
-        <div class="reel-card" data-cat="ads" data-video-src="">
+        <div class="reel-card" data-cat="reels" data-video-src="">
           <div class="reel-thumb v">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
@@ -759,7 +795,7 @@
   // Work tabs
   const sectionCodes = {
     long: 'VLOGS, VSL &amp; Vlog — 001/06',
-    short: 'HYPE, ADS &amp; TALKING HEAD — 001/06',
+    short: 'HYPE, reels &amp; TALKING HEAD — 001/06',
     motion: 'MOTION &amp; VFX — 001/04'
   };
   const codeEl = document.getElementById('work-section-code');
@@ -776,8 +812,6 @@
   card.querySelector('.reel-video').pause();
   card.classList.remove('is-playing');
 });
-
-
       panels.forEach(p => {
         if (p.dataset.panel === target) {
           p.classList.add('visible');
@@ -919,6 +953,43 @@ card.classList.add('is-playing');
     card.classList.remove('is-playing');
   }
 });
+});
+
+// ---------- Likes / Views / Comments ----------
+document.querySelectorAll('.reel-card').forEach(card => {
+  const meta = card.querySelector('.reel-meta');
+  if (!meta) return;
+
+  const likes = card.dataset.likes || '0';
+  const views = card.dataset.views || '0';
+  const comments = card.dataset.comments || '0';
+
+  const stats = document.createElement('div');
+  stats.className = 'reel-stats';
+  stats.innerHTML = `
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="#97968f" stroke-width="2"><path d="M12 21s-7-4.35-9.5-8.5C.7 8.9 2.5 5 6 5c2 0 3.5 1 4 2.5C10.5 6 12 5 14 5c3.5 0 5.3 3.9 3.5 7.5C19 16.65 12 21 12 21z"/></svg>${likes}</span>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="#97968f" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>${views}</span>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="#97968f" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1.3-3.9a8.38 8.38 0 0 1-1-4.1A8.5 8.5 0 0 1 12.5 3a8.38 8.38 0 0 1 8.5 8.5z"/></svg>${comments}</span>
+  `;
+  meta.appendChild(stats);
+});
+// ---------- Title links ----------
+document.querySelectorAll('.reel-card').forEach(card => {
+  const link = card.dataset.link;
+  if (!link) return; // no link set — title stays plain text
+
+  const h3 = card.querySelector('.reel-meta h3');
+  if (!h3) return;
+
+  const a = document.createElement('a');
+  a.href = link;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  a.textContent = h3.textContent;
+  a.addEventListener('click', e => e.stopPropagation()); // don't trigger play/pause on the card
+
+  h3.textContent = '';
+  h3.appendChild(a);
 });
 </script>
 
