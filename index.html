@@ -908,6 +908,24 @@ function formatTimecode(totalSeconds, long) {
     ? `${pad(h)}:${pad(m)}:${pad(s)}`   // 00:00:47
     : `${h * 60 + m}:${pad(s)}`;         // 0:12
 }
+// ---------- Faster loading helpers ----------
+const OPTIMIZE_VIDEOS = true; // set to false to go back to your original URLs
+
+// Smaller, compressed copy from Cloudinary (max 1280px, auto quality)
+function optimizedVideoUrl(url) {
+  url = url.trim();
+  if (!OPTIMIZE_VIDEOS || !url.includes('/video/upload/')) return url;
+  return url.replace('/video/upload/', '/video/upload/c_limit,w_1280,h_1280,q_auto/');
+}
+
+// Still image from the first frame, so a thumbnail shows instantly
+function posterUrl(url) {
+  url = url.trim();
+  if (!url.includes('/video/upload/')) return null;
+  return url
+    .replace('/video/upload/', '/video/upload/so_0,c_limit,w_800,h_800,q_auto/')
+    .replace(/\.[a-z0-9]+$/i, '.jpg');
+}
  // ---------- Video placeholders ----------
 document.querySelectorAll('.reel-card').forEach(card => {
   const src = card.dataset.videoSrc;
@@ -916,6 +934,13 @@ document.querySelectorAll('.reel-card').forEach(card => {
   if (!src) return; // no video assigned yet — placeholder stays visible
 
   card.classList.add('has-video');
+    const poster = posterUrl(src);
+  if (poster) {
+    const thumb = card.querySelector('.reel-thumb');
+    thumb.style.backgroundImage = `url("${poster}"), linear-gradient(160deg, #1c1c19, #060605 70%)`;
+    thumb.style.backgroundSize = 'cover';
+    thumb.style.backgroundPosition = 'center';
+  }
 
   // Fullscreen button
 const fsBtn = document.createElement('button');
@@ -940,9 +965,25 @@ fsBtn.addEventListener('click', (e) => {
     }
   }
 });
-  const source = document.createElement('source');
-  source.src = src;
-  video.appendChild(source);
+  let loaded = false;
+  const loadVideo = () => {
+    if (loaded) return;
+    loaded = true;
+    const source = document.createElement('source');
+    source.src = optimizedVideoUrl(src);
+    video.appendChild(source);
+    video.load();
+  };
+
+  // Only start loading when the card is close to the viewport
+  new IntersectionObserver((entries, obs) => {
+    if (entries[0].isIntersecting) { loadVideo(); obs.disconnect(); }
+  }, { rootMargin: '300px' }).observe(card);
+
+  // Start buffering as soon as someone hovers or touches the card
+  const warm = () => { loadVideo(); video.preload = 'auto'; };
+  card.addEventListener('pointerenter', warm, { once: true });
+  card.addEventListener('touchstart', warm, { once: true, passive: true });
   const loader = document.createElement('div');
 loader.className = 'reel-loader';
 loader.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>';
@@ -1000,7 +1041,8 @@ video.addEventListener('ended', () => {
         other.classList.remove('is-playing');
       }
     });
-
+        loadVideo();
+    video.preload = 'auto';
     video.muted = false;
 if (video.readyState < 3) {
   loader.classList.add('is-active');
