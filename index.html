@@ -6,7 +6,7 @@
 <title>Reel — Video Editor Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Caveat:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #060606;
@@ -130,6 +130,21 @@
   }
   .work-tab:hover { color: var(--ink); }
   .work-tab.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    /* ---------- Handwritten hint ---------- */
+  .hand-note {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin: 0 0 22px;
+    font-family: 'Caveat', 'Bradley Hand', 'Segoe Script', cursive;
+    font-size: 24px; line-height: 1.1; color: var(--ink-dim);
+    transform: rotate(-1.5deg);
+    transform-origin: left center;
+  }
+  .hand-note b { color: var(--ink); font-weight: 700; }
+  .hand-note svg {
+    width: 40px; height: 32px; flex-shrink: 0;
+    fill: none; stroke: var(--ink-dim); stroke-width: 1.6;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
 
   /* ---------- Category chips ---------- */
   .chip-row { display: flex; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; }
@@ -500,6 +515,12 @@
       <button class="work-tab" data-tab="motion">Motion Graphics</button>
     </div>
 
+        <p class="hand-note reveal">
+      psst... press or click a <b>title</b> to watch the actual video
+      <svg viewBox="0 0 40 32" aria-hidden="true"><path d="M4 5 C16 2 30 8 33 26 M27 20 L33 27 L37 18"/></svg>
+    </p>
+
+
     <!-- LONG FORM -->
     <div class="work-panel visible fade-in" data-panel="long">
       <div class="chip-row">
@@ -511,7 +532,7 @@
 
       </div>
       <div class="reel-grid reveal-stagger reveal">
-        <div class="reel-card" data-cat="vsl" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794538334/Vancouv.mp4 " data-likes="74" data-views="2K" data-comments="1" data-link="https://www.instagram.com/p/DfaavekNauQ/"> 
+        <div class="reel-card" data-cat="Tvlog" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623988/Vancouv.mp4" data-likes="74" data-views="2K" data-comments="1" data-link="https://www.instagram.com/p/DfaavekNauQ/"> 
           <div class="reel-thumb h">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
@@ -519,7 +540,7 @@
           </div>
           <div class="reel-meta"><div><h3>Vancouver - Travel Vlog </h3></div><div class="reel-tc">00:00:47</div></div>
         </div>
-        <div class="reel-card" data-cat="Tvlog" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794536522/Rush3.mp4" data-likes="91" data-views="4.2K" data-comments="5" data-link="https://www.instagram.com/reel/DeAq3kVNQJs/">
+        <div class="reel-card" data-cat="general" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623986/Rush3.mp4" data-likes="91" data-views="4.2K" data-comments="5" data-link="https://www.instagram.com/reel/DeAq3kVNQJs/">
           <div class="reel-thumb h">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
@@ -527,7 +548,7 @@
           </div>
           <div class="reel-meta"><div><h3>Car Edit - Montage Vlog</h3></div><div class="reel-tc">00:03:41</div></div>
         </div>
-        <div class="reel-card" data-cat="general" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1790427075/VSL.mp4" data-likes="115" data-views="8K" data-comments="10" data-link="https://www.instagram.com/reel/DdvoMjSNDbL">
+        <div class="reel-card" data-cat="general" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623995/Vsl.mp4" data-likes="115" data-views="8K" data-comments="10" data-link="https://www.instagram.com/reel/DdvoMjSNDbL">
           <div class="reel-thumb h">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
@@ -535,7 +556,7 @@
           </div>
           <div class="reel-meta"><div><h3>PrimeVerse Event Vlog - General Vlog</h3></div><div class="reel-tc">00:48:20</div></div>
         </div>
-        <div class="reel-card" data-cat="Tvlog" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794539384/Rush4.mp4" data-likes="171" data-views="6K" data-comments="19" data-link="https://www.instagram.com/reel/DeHX962BzF2/">
+        <div class="reel-card" data-cat="Tvlog" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623997/Rush4.mp4" data-likes="171" data-views="6K" data-comments="19" data-link="https://www.instagram.com/reel/DeHX962BzF2/">
           <div class="reel-thumb h">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
@@ -543,7 +564,7 @@
           </div>
           <div class="reel-meta"><div><h3>Moving In - Montage Vlog</h3></div><div class="reel-tc">00:11:05</div></div>
         </div>
-        <div class="reel-card" data-cat="gym" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1790430669/Gyn.mp4" data-likes="1.2K" data-views="45K" data-comments="230" data-link="https://www.instagram.com/reel/DdJAexRyuwK">
+        <div class="reel-card" data-cat="gym" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623986/Finalgym2.mp4" data-likes="1.2K" data-views="45K" data-comments="230" data-link="https://www.instagram.com/reel/DdJAexRyuwK">
           <div class="reel-thumb h">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
@@ -551,7 +572,7 @@
           </div>
           <div class="reel-meta"><div><h3>Rahul.lifelogs - Gym Vlog</h3></div><div class="reel-tc">00:07:44</div></div>
         </div>
-        <div class="reel-card" data-cat="Tvlog" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/VegasVlog2.mp4" data-likes="52" data-views="1.6K" data-comments="3" data-link="https://www.instagram.com/p/DdfzpGHMZtZ/">
+        <div class="reel-card" data-cat="Tvlog" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623990/Vegasvlog2.mp4" data-likes="52" data-views="1.6K" data-comments="3" data-link="https://www.instagram.com/p/DdfzpGHMZtZ/">
           <div class="reel-thumb h">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
@@ -559,7 +580,7 @@
           </div>
         <div class="reel-meta"><div><h3>Vegas — Travel Vlog </h3></div><div class="reel-tc">00:36:12</div></div>
         </div>
-         <div class="reel-card" data-cat="general" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794537843/40thMonthsary.mp4" data-likes="57.2k" data-views="300K" data-comments="160" data-link="https://www.tiktok.com/@mkcv_creates/video/7684979683154349320">
+         <div class="reel-card" data-cat="general" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623989/40Thmonthsary.mp4" data-likes="57.2k" data-views="300K" data-comments="160" data-link="https://www.tiktok.com/@mkcv_creates/video/7684979683154349320">
           <div class="reel-thumb h">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
@@ -567,7 +588,7 @@
           </div>
         <div class="reel-meta"><div><h3>Personal — General Vlog </h3></div><div class="reel-tc">00:36:12</div></div>
         </div>
-         <div class="reel-card" data-cat="general" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794537848/AliBdayFinal1080p2.mp4" data-likes="68" data-views="1.6K" data-comments="4" data-link="https://www.tiktok.com/@mkcv_creates/video/7691705982694542600">
+         <div class="reel-card" data-cat="general" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623986/Alibdayfinal1080p2.mp4" data-likes="68" data-views="1.6K" data-comments="4" data-link="https://www.tiktok.com/@mkcv_creates/video/7691705982694542600">
           <div class="reel-thumb h">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
@@ -575,6 +596,31 @@
           </div>
         <div class="reel-meta"><div><h3>Birthday - General Vlog </h3></div><div class="reel-tc">00:36:12</div></div>
         </div>
+        <div class="reel-card" data-cat="gym" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623987/15S2.mp4" data-likes="1.98k" data-views="98K" data-comments="241" data-link="https://www.instagram.com/reel/DeMLt-MyhhL/">
+          <div class="reel-thumb h">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+        <div class="reel-meta"><div><h3>Gym Edit - Gym Vlog </h3></div><div class="reel-tc">00:36:12</div></div>
+        </div>
+        <div class="reel-card" data-cat="vsl" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623993/Vsl1.mp4">
+          <div class="reel-thumb h">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+        <div class="reel-meta"><div><h3>VSL - PrimeVerse Course</h3></div><div class="reel-tc">00:36:12</div></div>
+        </div>
+        <div class="reel-card" data-cat="general" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794625611/Wac2.mp4" data-likes="80" data-views="3.2K" data-comments="15" data-link="https://www.instagram.com/reel/Dd-cFyEhBKd/">
+          <div class="reel-thumb h">
+            <video class="reel-video" muted loop playsinline preload="metadata"></video>
+              <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
+            <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
+          </div>
+        <div class="reel-meta"><div><h3>Car Edit - General Vlog</h3></div><div class="reel-tc">00:36:12</div></div>
+        </div>
+      
         
         
 
@@ -592,31 +638,31 @@
         <span class="chip" data-cat="general">General</span>
       </div>
       <div class="reel-grid four-col reveal-stagger reveal">
-        <div class="reel-card" data-cat="general" data-video-src="https://www.instagram.com/reel/Dcx-25TyKLt/">
+        <div class="reel-card" data-cat="reels" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623996/Final2m.mp4" data-likes="40" data-views="1.1K" data-comments="7" data-link="https://www.instagram.com/reel/DdSy3x2JMTB/">
           <div class="reel-thumb v">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
             <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
           </div>
-          <div class="reel-meta stacked"><h3>Leg Day — Hype Edit</h3><div class="reel-tc">00:00:32</div></div>
+          <div class="reel-meta stacked"><h3>Car edit - Reels</h3><div class="reel-tc">00:00:32</div></div>
         </div>
-        <div class="reel-card" data-cat="talkinghead" data-video-src="">
+        <div class="reel-card" data-cat="reels" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794625612/Hotwheels.mp4"data-likes="86" data-views="1.4K" data-comments="6" data-link="https://www.instagram.com/reel/DeC-z9qydq_/">
           <div class="reel-thumb v">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
             <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
           </div>
-          <div class="reel-meta stacked"><h3>Ep. 12 Clip — Talking Head</h3><div class="reel-tc">00:00:48</div></div>
+          <div class="reel-meta stacked"><h3>Car edit - Reels</h3><div class="reel-tc">00:00:48</div></div>
         </div>
-        <div class="reel-card" data-cat="reels" data-video-src="">
+        <div class="reel-card" data-cat="talkinghead" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623988/3.mp4" data-likes="313" data-views="16k" data-comments="236" data-link="https://www.instagram.com/reel/Dcx-25TyKLt/">
           <div class="reel-thumb v">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
             <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
           </div>
-          <div class="reel-meta stacked"><h3>Product Drop — Ad Cutdown</h3><div class="reel-tc">00:00:15</div></div>
+          <div class="reel-meta stacked"><h3>Product UGC — Talking head</h3><div class="reel-tc">00:00:15</div></div>
         </div>
-        <div class="reel-card" data-cat="general" data-video-src="">
+        <div class="reel-card" data-cat="reels" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623986/Sday2.mp4" data-likes="5.7k" data-views="90.2k" data-comments="196" data-link="https://www.instagram.com/reel/DdL-yMkSn0I/">
           <div class="reel-thumb v">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
@@ -624,21 +670,21 @@
           </div>
           <div class="reel-meta stacked"><h3>PR Day — Hype Edit</h3><div class="reel-tc">00:00:27</div></div>
         </div>
-        <div class="reel-card" data-cat="talkinghead" data-video-src="">
+        <div class="reel-card" data-cat="talkinghead" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794623986/Wimbfinal3.mp4" data-likes="340" data-views="73.7k" data-comments="77" data-link="https://www.instagram.com/reel/DdehVJKSeXe/">
           <div class="reel-thumb v">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
             <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
           </div>
-          <div class="reel-meta stacked"><h3>Founder QA — Talking Head</h3><div class="reel-tc">00:00:55</div></div>
+          <div class="reel-meta stacked"><h3>Whats in my bag — Talking head</h3><div class="reel-tc">00:00:55</div></div>
         </div>
-        <div class="reel-card" data-cat="reels" data-video-src="">
+        <div class="reel-card" data-cat="general" data-video-src="https://res.cloudinary.com/v7ehljsh/video/upload/v1794626547/Withsound.mp4" data-likes="23" data-views="539" data-comments="1" data-link="https://www.tiktok.com/@ifernminiladygelaimateo/video/7700154647540944136" >
           <div class="reel-thumb v">
             <video class="reel-video" muted loop playsinline preload="metadata"></video>
               <input type="range" class="reel-scrubber" min="0" max="100" value="0" step="0.1">
             <span class="play"><svg class="icon-play" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><path d="M10 8.5L16 12L10 15.5V8.5Z" fill="#f1f0ec"/></svg><svg class="icon-pause" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#f1f0ec" stroke-width="1"/><rect x="9" y="8" width="2.2" height="8" fill="#f1f0ec"/><rect x="13" y="8" width="2.2" height="8" fill="#f1f0ec"/></svg><span class="placeholder-tag">ADD VIDEO</span></span>
           </div>
-          <div class="reel-meta stacked"><h3>App Install — Ad Cutdown</h3><div class="reel-tc">00:00:20</div></div>
+          <div class="reel-meta stacked"><h3>Vlog - Showcase</h3><div class="reel-tc">00:00:20</div></div>
         </div>
       </div>
     </div>
@@ -909,7 +955,7 @@ function formatTimecode(totalSeconds, long) {
     : `${h * 60 + m}:${pad(s)}`;         // 0:12
 }
 // ---------- Faster loading helpers ----------
-const OPTIMIZE_VIDEOS = true; // set to false to go back to your original URLs
+const OPTIMIZE_VIDEOS = false; // set to false to go back to your original URLs
 
 // Smaller, compressed copy from Cloudinary (max 1280px, auto quality)
 function optimizedVideoUrl(url) {
@@ -988,7 +1034,6 @@ fsBtn.addEventListener('click', (e) => {
 loader.className = 'reel-loader';
 loader.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>';
 card.querySelector('.reel-thumb').appendChild(loader);
-card.appendChild(loader);
 
 const tcEl = card.querySelector('.reel-tc');
 video.addEventListener('loadedmetadata', () => {
@@ -1021,7 +1066,6 @@ video.addEventListener('ended', () => {
   video.currentTime = 0;
 });
 
-  video.load();
 
   // Dragging the scrubber seeks the video, and must not toggle play/pause
   // on the card underneath it.
